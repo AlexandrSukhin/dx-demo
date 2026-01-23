@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16  
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: user        # Имя пользователя БД
+      POSTGRES_PASSWORD: password  # Пароль
+      POSTGRES_DB: mydb         # Название БД (создастся автоматически)
+    ports:
+      - "5432:5432"             # Порт хоста:порт контейнера
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Сохранение данных между перезапусками
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Опционально: скрипт инициализации    
+    networks:
+      - my-pg-network
+
+volumes:
+  postgres_data:
+
+networks:
+  my-pg-network:
+    driver: bridge
